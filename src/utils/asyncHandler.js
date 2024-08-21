@@ -1,9 +1,8 @@
-const asyncHandler1 = (requestHandler) => {
-    (req, res, next) => {
-       Promise.resolve(requestHandler(req,res,next))
-       .catch(err => next(err));
-    }
-
+const asyncHandler1 = (fn) => (req,res,next) =>{
+    Promise.resolve(fn(req,res,next))
+    .catch((error) => {
+        next(error)}
+    );
 }
 
 export {asyncHandler1,asyncHandler2 }
@@ -12,10 +11,10 @@ const asyncHandler2 = (fn) => async (req,res,next) =>{
     try{
         await fn(req,res,next);
     }
-    catch(err){
-        res.status(err.code || 500).json({
+    catch(error){
+        res.status(error.code || 500).json({
             sucess:false,
-            message :err.message
+            message :error.message
         })
     }
 }
